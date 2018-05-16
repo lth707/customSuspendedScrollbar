@@ -57,7 +57,7 @@
             $slider.data('left', event.pageX);
             return false;
         })
-        $window.on('mouseover', function (event) {
+        $window.on('mousemove', function (event) {
             var isMouseDown = $slider.data('isMouseDown');
             if (isMouseDown == true) {
                 var distance = event.pageX - $slider.data('left');
