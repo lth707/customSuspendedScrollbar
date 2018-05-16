@@ -1,0 +1,18 @@
+.custom-suspended-scrollbar {
+    height: 12px;
+    width: 100%;
+    background-color: #f1f1f1;
+}
+.custom-suspended-scrollbar.tempwrap{
+    position: static;
+}
+.custom-suspended-scrollbar.wrap{
+    position: fixed;
+    bottom: 0;
+}
+.custom-suspended-scrollbar .slider{
+    background-color: #c1c1c1;
+    height: 12px;
+    width: 15px;
+    position: relative;
+}
