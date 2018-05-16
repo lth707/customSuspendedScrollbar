@@ -42,8 +42,8 @@
         function computeSliderWidth(scale) {
             scale = scale || 1;
             var sliderWidth = scale * 2 * window.innerWidth - $this.width();
-            if (sliderWidth < 0) {
-                return computeSliderWidth(scale + 0.5);
+            if (sliderWidth < 150) {
+                return computeSliderWidth(scale + 0.2);
             }
             $slider.data('scale', scale);
             return sliderWidth;
