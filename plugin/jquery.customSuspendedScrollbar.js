@@ -1,13 +1,18 @@
 (function ($) {
-    $.fn.customSuspendedScrollbar = function () {
+    $.fn.customSuspendedScrollbar = function (option) {
         var $this = $(this);
-        $this.css({
-            'position': 'relative',
-            'overflow-x': 'hidden'
-        });
-        $('body').css({
+        var $area = option.area || $('body');
+        $area.css({
             'overflow-x': 'hidden'
         })
+        var $parent = $area.parent();
+        var parentMarginBottom = 0;
+        var parentPaddingBottom = 0;
+        if ($parent.length) {
+            parentMarginBottom = parseFloat($parent.css('margin-bottom')) || 0;
+            parentPaddingBottom = parseFloat($parent.css('padding-bottom')) || 0;
+        }
+        var allBottom = parentMarginBottom + parentPaddingBottom;
         var $document = $(document);
         var $window = $(window);
         var $customScrollWrapTemp = $('<div class="custom-suspended-scrollbar tempwrap"></div>'); //用于滚动条悬浮时占位的，防止悬浮过度时跳动。
@@ -18,7 +23,7 @@
         $document.scroll(function () {
             var offsettop = $this.offset().top + $this.height();
             var scrollTop = $document.scrollTop();
-            if (scrollTop + window.innerHeight > offsettop + 12) {
+            if (scrollTop + window.innerHeight > offsettop + 12 + allBottom) {
                 $customScrollWrapTemp.hide();
                 $customScrollWrap.css({
                     'position': 'static'
@@ -109,7 +114,7 @@
                 '-webkit-transform': 'translate(' + left + 'px)', /* Safari 和 Chrome */
                 '-o-transform': 'translate(' + left + 'px)', /* Opera */
             })
-            $this.data('left',left)
+            $this.data('left', left)
         }
     }
 })(jQuery)
