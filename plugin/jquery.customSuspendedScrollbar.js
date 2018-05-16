@@ -52,6 +52,7 @@
             $slider.width(computeSliderWidth());
             $customScrollWrap.width(window.innerWidth);
             $document.scroll();
+            scroll(0)
         }
         reSetWidth();
         $window.resize(function () {
