@@ -1,5 +1,5 @@
 customSuspendedScrollbar悬浮的水平滚动条
-
+只适用于不得不分离水平滚动条和垂直滚动条的场景
 # 开始使用
 
 ## 前端引入插件的样式和js文件，注意jquery要先引入

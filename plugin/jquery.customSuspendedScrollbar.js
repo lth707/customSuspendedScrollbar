@@ -2,17 +2,25 @@
     $.fn.customSuspendedScrollbar = function (option) {
         var $this = $(this);
         var $area = option.area || $('body');
+        var wh = window.innerHeight;
+        var ah = $area.height();
+        if (ah < wh) { //当area高度小于窗口高度，直接用原生的滚动条
+            $area.css({
+                'overflow': 'auto'
+            });
+            return;
+        }
         $area.css({
-            'overflow-x': 'hidden'
+            'overflow': 'hidden'
         })
-        var $parent = $area.parent();
+        // var $parent = $area.parent();
         var parentMarginBottom = 0;
         var parentPaddingBottom = 0;
-        if ($parent.length) {
-            parentMarginBottom = parseFloat($parent.css('margin-bottom')) || 0;
-            parentPaddingBottom = parseFloat($parent.css('padding-bottom')) || 0;
-        }
-        var allBottom = parentMarginBottom + parentPaddingBottom;
+        // if ($parent.length) {
+        //     parentMarginBottom = parseFloat($parent.css('margin-bottom')) || 0;
+        //     parentPaddingBottom = parseFloat($parent.css('padding-bottom')) || 0;
+        // }
+        // var allBottom = parentMarginBottom + parentPaddingBottom;
         var $document = $(document);
         var $window = $(window);
         var $customScrollWrapTemp = $('<div class="custom-suspended-scrollbar tempwrap"></div>'); //用于滚动条悬浮时占位的，防止悬浮过度时跳动。
@@ -23,7 +31,8 @@
         $document.scroll(function () {
             var offsettop = $this.offset().top + $this.height();
             var scrollTop = $document.scrollTop();
-            if (scrollTop + window.innerHeight > offsettop + 12 + allBottom) {
+
+            if (scrollTop + window.innerHeight > offsettop + 12) {
                 $customScrollWrapTemp.hide();
                 $customScrollWrap.css({
                     'position': 'static'
@@ -36,12 +45,12 @@
                 });
             }
         })
-        if (window.innerWidth > $this.width()) {
-            $customScrollWrap.hide(); //假如window的宽度大于滚动区域，那么把滚动条隐藏起来
+        if ($area.width() > $this.width()) {
+            $customScrollWrap.hide(); //假如area的宽度大于滚动区域，那么把滚动条隐藏起来
         }
         function computeSliderWidth(scale) {
             scale = scale || 1;
-            var sliderWidth = scale * 2 * window.innerWidth - $this.width();
+            var sliderWidth = scale * 2 * $area.width() - $this.width();
             if (sliderWidth < 150) {
                 return computeSliderWidth(scale + 0.2);
             }
@@ -50,7 +59,7 @@
         }
         function reSetWidth() {
             $slider.width(computeSliderWidth());
-            $customScrollWrap.width(window.innerWidth);
+            $customScrollWrap.width($area.width());
             $document.scroll();
             scroll(0)
         }
@@ -77,20 +86,17 @@
 
         function computeScaleK() {
             var containerWidth = $this.width();
-            var windowWidth = window.innerWidth;
+            var areaWidth = $area.width();
             var scale = $slider.data('scale') || 1;
-            return (containerWidth - windowWidth) / (containerWidth - 2 * windowWidth * scale + windowWidth);
+            return (containerWidth - areaWidth) / (containerWidth - 2 * areaWidth * scale + areaWidth);
         }
         function scroll(distance) {
-            var wrapWidth = window.innerWidth;
+            var areaWidth = $area.width();
             var sliderWidth = $slider.width();
-            var traceWidth = wrapWidth - sliderWidth;
+            var traceWidth = areaWidth - sliderWidth;
             var scale = $slider.data('scale') || 1;
-            var currentLeft = parseFloat($slider.css('left'));
+            var currentLeft = parseFloat($slider.css('left')) || 0;
             var kScale = computeScaleK();
-            if (isNaN(currentLeft)) {
-                currentLeft = 0;
-            }
             if (currentLeft <= 0 && distance <= 0) {
                 $slider.css('left', 0);
                 setTranslate(0);
